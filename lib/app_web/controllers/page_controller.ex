@@ -1,9 +1,12 @@
 defmodule AppWeb.PageController do
   use AppWeb, :controller
 
-  def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
-    render(conn, :home, layout: false)
+  def cursos(conn, %{"path" => path}) do
+    content =
+      ("priv/static/content.json"
+      |> File.read!()
+      |> Jason.decode!(keys: :atoms)
+      |> Map.get(String.to_existing_atom(path)))
+    render(conn, "cursos.html", content)
   end
 end

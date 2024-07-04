@@ -1,0 +1,17 @@
+{
+  "curso1": {
+    "title": "Curso 1",
+    "description": "Contenido del curso 1.",
+    "image": "/images/curso1.png"
+  },
+  "curso2": {
+    "title": "Curso 2",
+    "description": "Contenido del curso 2.",
+    "image": "/images/curso2.png"
+  },
+  "curso3": {
+    "title": "Curso 3",
+    "description": "Contenido del curso 3.",
+    "image": "/images/curso3.png"
+  }
+}

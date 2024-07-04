@@ -2,6 +2,7 @@ import Config
 
 # Configure your database
 config :app, App.Repo,
+  adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
   hostname: "db",

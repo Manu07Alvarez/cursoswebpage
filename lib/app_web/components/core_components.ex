@@ -41,7 +41,7 @@ defmodule AppWeb.CoreComponents do
   attr :on_cancel, JS, default: %JS{}
   slot :inner_block, required: true
 
-  def modal(assigns) do
+  def phx_modal(assigns) do
     ~H"""
     <div
       id={@id}
@@ -182,15 +182,15 @@ defmodule AppWeb.CoreComponents do
   ## Examples
 
       <.simple_form for={@form} phx-change="validate" phx-submit="save">
-        <.input field={@form[:email]} label="Email"/>
-        <.input field={@form[:username]} label="Username" />
+        <.phx_input field={@form[:email]} label="Email"/>
+        <.phx_input field={@form[:username]} label="Username" />
         <:actions>
           <.button>Save</.button>
         </:actions>
       </.simple_form>
   """
   attr :for, :any, required: true, doc: "the datastructure for the form"
-  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+  attr :as, :any, default: nil, doc: "the server side parameter to collect all phx_input under"
 
   attr :rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target multipart),
@@ -226,7 +226,7 @@ defmodule AppWeb.CoreComponents do
 
   slot :inner_block, required: true
 
-  def button(assigns) do
+  def phx_button(assigns) do
     ~H"""
     <button
       type={@type}
@@ -243,15 +243,15 @@ defmodule AppWeb.CoreComponents do
   end
 
   @doc """
-  Renders an input with label and error messages.
+  Renders an phx_input with label and error messages.
 
   A `Phoenix.HTML.FormField` may be passed as argument,
-  which is used to retrieve the input name, id, and values.
+  which is used to retrieve the phx_input name, id, and values.
   Otherwise all attributes may be passed explicitly.
 
   ## Types
 
-  This function accepts all HTML input types, considering that:
+  This function accepts all HTML phx_input types, considering that:
 
     * You may also set `type="select"` to render a `<select>` tag
 
@@ -259,14 +259,14 @@ defmodule AppWeb.CoreComponents do
 
     * For live file uploads, see `Phoenix.Component.live_file_input/1`
 
-  See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
+  See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/phx_input
   for more information. Unsupported types, such as hidden and radio,
   are best written directly in your templates.
 
   ## Examples
 
-      <.input field={@form[:email]} type="email" />
-      <.input name="my-input" errors={["oh no!"]} />
+      <.phx_input field={@form[:email]} type="email" />
+      <.phx_input name="my-phx_input" errors={["oh no!"]} />
   """
   attr :id, :any, default: nil
   attr :name, :any
@@ -293,16 +293,16 @@ defmodule AppWeb.CoreComponents do
 
   slot :inner_block
 
-  def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+  def phx_input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
-    |> input()
+    |> phx_input()
   end
 
-  def input(%{type: "checkbox"} = assigns) do
+  def phx_input(%{type: "checkbox"} = assigns) do
     assigns =
       assign_new(assigns, :checked, fn ->
         Phoenix.HTML.Form.normalize_value("checkbox", assigns[:value])
@@ -311,8 +311,8 @@ defmodule AppWeb.CoreComponents do
     ~H"""
     <div phx-feedback-for={@name}>
       <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
-        <input type="hidden" name={@name} value="false" />
-        <input
+        <phx_input type="hidden" name={@name} value="false" />
+        <phx_input
           type="checkbox"
           id={@id}
           name={@name}
@@ -328,7 +328,7 @@ defmodule AppWeb.CoreComponents do
     """
   end
 
-  def input(%{type: "select"} = assigns) do
+  def phx_input(%{type: "select"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
       <.label for={@id}><%= @label %></.label>
@@ -347,7 +347,7 @@ defmodule AppWeb.CoreComponents do
     """
   end
 
-  def input(%{type: "textarea"} = assigns) do
+  def phx_input(%{type: "textarea"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
       <.label for={@id}><%= @label %></.label>
@@ -368,11 +368,11 @@ defmodule AppWeb.CoreComponents do
   end
 
   # All other inputs text, datetime-local, url, password, etc. are handled here...
-  def input(assigns) do
+  def phx_input(assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
       <.label for={@id}><%= @label %></.label>
-      <input
+      <phx_input
         type={@type}
         name={@name}
         id={@id}
@@ -468,7 +468,7 @@ defmodule AppWeb.CoreComponents do
 
   slot :action, doc: "the slot for showing user actions in the last table column"
 
-  def table(assigns) do
+  def phx_table(assigns) do
     assigns =
       with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
         assign(assigns, row_id: assigns.row_id || fn {id, _item} -> id end)
